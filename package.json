@@ -1,5 +1,23 @@
 {
   "dependencies": {
     "discord.js": "^13.6.0"
-  }
+  },
+  "name": "discord-welcome-image-bot",
+  "description": "A template bot for people who want to use my api, which generates Discord welcome images.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jiron/discord-welcome-image-bot.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jiron/discord-welcome-image-bot/issues"
+  },
+  "homepage": "https://github.com/Jiron/discord-welcome-image-bot#readme"
 }
