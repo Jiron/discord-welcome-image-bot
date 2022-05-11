@@ -14,6 +14,7 @@ client.on('ready', () => {
 });
 
 client.on('guildMemberAdd', (member) => {
+  var user = member.user;
   var imageURL = `https://api.discorddevtools.xyz/welcome-image-generator/generate.png?username=${user.username}&discriminator=${user.discriminator}&image=${user.avatarURL()}&usernameColor=fff&discriminatorColor=fff&title=Welcome+to+the+server!&titleColor=a9a9a9&textColor=a9a9a9&borderColor=a9a9a9&background=https://cdn.wallpapersafari.com/97/1/kSG1Bj.jpg`;
   https.get(imageURL, (resp) => {
     resp.on('data', () => {
@@ -21,7 +22,6 @@ client.on('guildMemberAdd', (member) => {
     });
     // Await image to load. Quite necessary till the api gets improvement  
     resp.on('end', () => {
-      var user = member.user;
       const embed = new Discord.MessageEmbed()
       .setTitle('Welcome!')
       .setImage(imageURL)
