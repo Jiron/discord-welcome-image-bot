@@ -1,14 +1,22 @@
 {
-  "dependencies": {
-    "discord.js": "^13.6.0"
-  },
   "name": "discord-welcome-image-bot",
-  "description": "A template bot for people who want to use my api, which generates Discord welcome images.",
-  "version": "1.0.0",
+  "description": "An example Discord bot that welcomes new members with an image from the DiscordDevTools welcome image API.",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
   "main": "index.js",
-  "devDependencies": {},
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "run": "node index.js"
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -19,5 +27,21 @@
   "bugs": {
     "url": "https://github.com/Jiron/discord-welcome-image-bot/issues"
   },
-  "homepage": "https://github.com/Jiron/discord-welcome-image-bot#readme"
+  "homepage": "https://github.com/Jiron/discord-welcome-image-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.27.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vitest": "^5.0.5"
+  }
 }
