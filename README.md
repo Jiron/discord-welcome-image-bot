@@ -205,4 +205,5 @@ no network and no Discord connection.
 
 ## License
 
-Private repository, not open source. See the `LICENSE` file.
+The code is public to read, but this is not an open source project: all rights reserved, and no license is granted.
+See the `LICENSE` file.
