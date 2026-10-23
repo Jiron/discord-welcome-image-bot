@@ -205,4 +205,4 @@ no network and no Discord connection.
 
 ## License
 
-MIT
+Private repository, not open source. See the `LICENSE` file.
