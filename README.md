@@ -155,36 +155,53 @@ test/                    Vitest tests (no Discord connection needed)
 
 ## Scripts
 
-| Script              | Does                        |
-| ------------------- | --------------------------- |
-| `npm run build`     | Compile `src/` to `dist/`   |
-| `npm start`         | Run the compiled bot        |
-| `npm run dev`       | Run from source and reload  |
-| `npm run typecheck` | Type-check source and tests |
-| `npm run lint`      | ESLint                      |
-| `npm run format`    | Prettier                    |
-| `npm test`          | Vitest                      |
+| Script                 | Does                        |
+| ---------------------- | --------------------------- |
+| `npm run build`        | Compile `src/` to `dist/`   |
+| `npm start`            | Run the compiled bot        |
+| `npm run dev`          | Run from source and reload  |
+| `npm run typecheck`    | Type-check source and tests |
+| `npm run lint`         | ESLint                      |
+| `npm run format`       | Prettier                    |
+| `npm run format:check` | Prettier, check only        |
+| `npm test`             | Vitest                      |
 
 ## Deploy
 
-The bot is a single long-running Node process. With PM2, point an app at the repository's `index.js`:
+The bot is a single long-running Node process (Node 22 or newer; CI and the live machine use Node 24). It needs the
+build: `index.js` in the repository root only contains `import './dist/index.js';`.
 
-```js
-{ name: 'discord-welcome-image-bot', cwd: '/path/to/bot', script: 'index.js' }
-```
-
+On the DiscordDevTools machine PM2 runs it from `C:\Code\ecosystem.config.js` (app `discord-welcome-image-bot`, `cwd` =
+this folder, script `index.js`, `shutdown_with_message: true`); `StartEdno.bat` starts it through the same file.
 Deploying an update:
 
 ```sh
-git pull
+git pull --ff-only
 npm ci
-npm run build
+npm run build          # index.js fails to start without dist/
 pm2 restart discord-welcome-image-bot
+pm2 save
+```
+
+`.env` (token and channel) stays on the machine and is not in git. On another host, point any process manager at
+`index.js`, for example:
+
+```js
+{ name: 'discord-welcome-image-bot', cwd: '/path/to/bot', script: 'index.js', shutdown_with_message: true }
 ```
 
 The bot exits cleanly on `SIGINT`, `SIGTERM` and PM2's `shutdown` message (set `shutdown_with_message: true` on Windows,
 where signals cannot be delivered). Logs are one JSON object per line on stdout (info) and stderr (warnings and errors),
 and never contain the token. Unhandled promise rejections are logged, not fatal.
+
+## Tests and CI
+
+`npm test` runs Vitest: config parsing and the `config.json` fallback, URL building, the message and embed, the image
+download with its retry and `Retry-After` handling, the text fallback, and the channel and permission checks. It needs
+no network and no Discord connection.
+
+`.github/workflows/ci.yml` runs on every push to `main` and on pull requests, on Ubuntu with Node 24: `npm ci`,
+`npm run typecheck`, `npm run lint`, `npm run format:check`, `npm test`, `npm run build`.
 
 ## License
 
