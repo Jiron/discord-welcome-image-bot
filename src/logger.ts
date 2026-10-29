@@ -23,7 +23,7 @@ export function serializeError(error: unknown): Record<string, unknown> {
   return { message: String(error) };
 }
 
-/** One JSON object per line; stderr for warn/error so PM2 keeps them in the error log. */
+/** One JSON object per line; stderr for warn/error so a process manager can split them into separate logs. */
 export function createLogger(options: LoggerOptions = {}): Logger {
   const secrets = (options.secrets ?? []).filter((secret) => secret.length >= 8);
   const write =

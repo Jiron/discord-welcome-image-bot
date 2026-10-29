@@ -64,9 +64,9 @@ function main(): void {
   process.on('SIGTERM', () => {
     shutdown('SIGTERM');
   });
-  // PM2 on Windows cannot deliver signals; with shutdown_with_message it sends this instead.
+  // Where signals cannot be delivered (Windows), a process manager can send a 'shutdown' IPC message instead.
   process.on('message', (message) => {
-    if (message === 'shutdown') shutdown('pm2 shutdown message');
+    if (message === 'shutdown') shutdown('shutdown message');
   });
 
   client.once(Events.ClientReady, (readyClient) => {

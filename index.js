@@ -1,2 +1,2 @@
-// PM2 (C:\Code\ecosystem.config.js) starts this file; the bot itself lives in src/ and is built to dist/.
+// Convenience entry point for process managers: `node index.js` runs the compiled bot (run `npm run build` first).
 import './dist/index.js';

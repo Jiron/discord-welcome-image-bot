@@ -69,7 +69,7 @@ Invalid values stop the bot at start with a message that names the setting (neve
 
 Earlier versions kept the token and channel in `config.json`. If `CHANNEL_ID` is not set, the bot still reads `channelID`
 from `config.json`, so an existing `.env` that only holds `TOKEN` keeps working (it logs a warning). The token is only
-read from `TOKEN`.
+read from `TOKEN`. New setups should just use `.env`; `config.json` is git-ignored and is no longer shipped.
 
 ## Templates
 
@@ -141,7 +141,7 @@ You need `intents.members = True` for `on_member_join`.
 ## Project layout
 
 ```
-index.js                 PM2 entry point: imports dist/index.js
+index.js                 optional entry point for process managers: imports dist/index.js
 src/index.ts             wiring: config, client, events, graceful shutdown
 src/config.ts            zod-validated environment, config.json fallback
 src/welcome-url.ts       pure: builds the API URL
@@ -168,31 +168,21 @@ test/                    Vitest tests (no Discord connection needed)
 
 ## Deploy
 
-The bot is a single long-running Node process (Node 22 or newer; CI and the live machine use Node 24). It needs the
-build: `index.js` in the repository root only contains `import './dist/index.js';`.
-
-On the DiscordDevTools machine PM2 runs it from `C:\Code\ecosystem.config.js` (app `discord-welcome-image-bot`, `cwd` =
-this folder, script `index.js`, `shutdown_with_message: true`); `StartEdno.bat` starts it through the same file.
-Deploying an update:
+The bot is a single long-running Node process (Node 22 or newer; CI runs on Node 24). Build it once, then run it with
+whatever you use to keep processes alive (systemd, Docker, a process manager, ...):
 
 ```sh
-git pull --ff-only
 npm ci
-npm run build          # index.js fails to start without dist/
-pm2 restart discord-welcome-image-bot
-pm2 save
+npm run build
+npm start              # same as: node dist/index.js (or: node index.js)
 ```
 
-`.env` (token and channel) stays on the machine and is not in git. On another host, point any process manager at
-`index.js`, for example:
+Run it from the project folder, or set the environment variables yourself. `.env` holds your token, so keep it out of git
+(it is in `.gitignore`). To update, pull, run `npm ci` and `npm run build` again, and restart the process.
 
-```js
-{ name: 'discord-welcome-image-bot', cwd: '/path/to/bot', script: 'index.js', shutdown_with_message: true }
-```
-
-The bot exits cleanly on `SIGINT`, `SIGTERM` and PM2's `shutdown` message (set `shutdown_with_message: true` on Windows,
-where signals cannot be delivered). Logs are one JSON object per line on stdout (info) and stderr (warnings and errors),
-and never contain the token. Unhandled promise rejections are logged, not fatal.
+The bot exits cleanly on `SIGINT` and `SIGTERM`, and on a `shutdown` message sent over IPC (for process managers that
+cannot deliver signals, such as on Windows). Logs are one JSON object per line on stdout (info) and stderr (warnings and
+errors), and never contain the token. Unhandled promise rejections are logged, not fatal.
 
 ## Tests and CI
 
@@ -205,5 +195,4 @@ no network and no Discord connection.
 
 ## License
 
-The code is public to read, but this is not an open source project: all rights reserved, and no license is granted.
-See the `LICENSE` file.
+Released under the [MIT License](LICENSE).

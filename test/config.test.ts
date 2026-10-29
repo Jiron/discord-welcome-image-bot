@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ConfigError, DEFAULT_BACKGROUND, legacyChannelId, parseConfig } from '../src/config.js';
 
-const CHANNEL = '922858209394458643';
+const CHANNEL = '123456789012345678';
 const required = { TOKEN: 'secret-token-value', CHANNEL_ID: CHANNEL };
 
 describe('parseConfig', () => {

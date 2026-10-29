@@ -126,7 +126,9 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# --- Project (added 2026-10 safety net) ---
+# --- Project ---
+# Local config of the pre-2.0 bot (still read as a fallback); keep it out of git
+config.json
 node_modules/
 cached/
 temp/
