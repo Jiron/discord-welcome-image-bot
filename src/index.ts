@@ -97,14 +97,14 @@ function main(): void {
     void (async () => {
       const check = await fetchChannel(member.client, config.channelId);
       if (!check.ok) {
-        logger.error('Cannot welcome member', { userId: member.id, reason: check.reason });
+        logger.error('Cannot welcome member', { reason: check.reason });
         return;
       }
       // The channel belongs to one server; ignore joins on any other server the bot is in.
       if (check.channel.guildId !== member.guild.id) return;
       await sendWelcome(member, { config, channel: check.channel, logger });
     })().catch((error: unknown) => {
-      logger.error('Welcome failed', { userId: member.id, error: serializeError(error) });
+      logger.error('Welcome failed', { error: serializeError(error) });
     });
   });
 

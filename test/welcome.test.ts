@@ -135,6 +135,29 @@ describe('sendWelcome', () => {
       expect.anything(),
     );
   });
+
+  it('keeps the member out of the log, on success and on failure', async () => {
+    const member = makeMember();
+    const logged = (logger: ReturnType<typeof makeLogger>): string =>
+      JSON.stringify(
+        [logger.debug, logger.info, logger.warn, logger.error].flatMap(
+          (fn) => vi.mocked(fn).mock.calls,
+        ),
+      );
+
+    const ok = setup(vi.fn().mockResolvedValue(imageResponse()));
+    await sendWelcome(member, ok.deps);
+    const failing = setup(vi.fn().mockResolvedValue(new Response('x', { status: 500 })));
+    failing.channel.send.mockRejectedValue(new Error('Missing Access'));
+    await sendWelcome(member, failing.deps);
+
+    for (const text of [logged(ok.logger), logged(failing.logger)]) {
+      expect(text).not.toBe('[]');
+      expect(text).not.toContain(member.id);
+      expect(text).not.toContain(member.displayName);
+      expect(text).not.toContain('avatars/');
+    }
+  });
 });
 
 describe('fetchImage', () => {

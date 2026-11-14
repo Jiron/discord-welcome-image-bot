@@ -37,7 +37,8 @@ export async function sendWelcome(
   deps: WelcomeDeps,
 ): Promise<WelcomeOutcome> {
   const { config, channel, logger } = deps;
-  const log = { userId: member.id, guild: member.guild.name };
+  // No member data in the log: the privacy policy promises the bot keeps no name and no user ID.
+  const log = { guild: member.guild.name };
 
   const url = buildWelcomeImageUrl(config, {
     displayName: resolveDisplayName(member),

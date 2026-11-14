@@ -182,7 +182,8 @@ Run it from the project folder, or set the environment variables yourself. `.env
 
 The bot exits cleanly on `SIGINT` and `SIGTERM`, and on a `shutdown` message sent over IPC (for process managers that
 cannot deliver signals, such as on Windows). Logs are one JSON object per line on stdout (info) and stderr (warnings and
-errors), and never contain the token. Unhandled promise rejections are logged, not fatal.
+errors), and never contain the token or anything about a member (no name, no avatar, no user ID). Unhandled promise
+rejections are logged, not fatal.
 
 ## Tests and CI
 
